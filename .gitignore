@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+build/
+dist/
+release/portable/
+*.spec
+.pytest_cache/
+output/
+.env
+.env.*
+!.env.example
+!.env.sample

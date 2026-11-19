@@ -1,0 +1,327 @@
+{
+  "version": 1,
+  "sha256": "0e662a521fba2fc22df1db653b1f24336b8ee27d7c6b1a5c65af85e2ed5ff9cf",
+  "source_sha256": "0abad2f9b6a78655fe977d2552384e0516bccb5e0e81b8aea7d35b76e272be27",
+  "size": 49704,
+  "symbols": {
+    "guard.c": 0,
+    "$x.1": 30488,
+    "$x.2": 2612,
+    "verify_canary_and_anti_gg": 3128,
+    "verify_manifest_and_self": 4500,
+    "verify_prologues_got_relro": 5356,
+    "open_read_id": 21876,
+    "scan_fd": 22284,
+    "detected_id": 5868,
+    "event_id": 5984,
+    "die_id": 3072,
+    "decode_str": 19996,
+    "die": 20240,
+    "sys6": 8068,
+    "canary_state_ptr": 7476,
+    "p3_spin_lock": 7616,
+    "read_clock_ms": 21064,
+    "p3_spin_unlock": 8380,
+    "scan_task_threads_nonroot": 21180,
+    "exists_id": 24284,
+    "sha256_update_vol": 24392,
+    "message": 20460,
+    "page_size": 7740,
+    "derive_master_key": 8132,
+    "decrypt_custom_range": 8928,
+    "clear_cache": 19484,
+    "vm_shift_val": 13436,
+    "vm_extend_val": 13612,
+    "vm_eval_cond": 13780,
+    "p3_inflate_stream": 14032,
+    "inf_build_tree": 24552,
+    "inf_decode_sym": 24736,
+    "p3_inflate_stream.len_bits": 33066,
+    "p3_inflate_stream.len_base": 33008,
+    "p3_inflate_stream.dist_bits": 33156,
+    "p3_inflate_stream.dist_base": 33096,
+    "p3_inflate_stream.clcidx": 33186,
+    "$x.3": 26312,
+    "run_env_and_security_probes": 17720,
+    "verify_cipher_mac_explicit": 18880,
+    "inf_dec_chunk": 19132,
+    "read_sleb": 19348,
+    "lookup_elf_sym_mem": 25196,
+    "$x.4": 0,
+    "decrypt_range": 19584,
+    "verify_cipher_mac": 19848,
+    "build_task_path": 21976,
+    "contains_id": 24176,
+    "contains": 24040,
+    "$d.5": 33504,
+    "$d.6": 33008,
+    "p3_vm_call_trampoline": 25952,
+    "p3_vm_bridge": 26048,
+    "p3_vm_exec": 9244,
+    "p3_gate_bridge": 26192,
+    "p3_runtime_check": 2672,
+    "memcpy": 2612,
+    "memset": 2644,
+    "p3_config": 33504,
+    "p3_ext": 35216,
+    "p3_str_cfg": 42672,
+    "p3_data_enc": 48408,
+    "p3_pack": 48576,
+    "p3_resolve_string": 6076,
+    "p3_on_demand_toggle": 8392,
+    "p3_inflate_mem": 13964,
+    "p3_pack_entry": 26312,
+    "p3_entry": 0,
+    "crypto.c": 0,
+    "p3_sha256_init.iv": 33208,
+    "sha_block": 30788,
+    "K": 33240,
+    "$d.2": 33208,
+    "$d.3": 33240,
+    "p3_sha256": 31480,
+    "p3_sha256_init": 30488,
+    "p3_sha256_update": 30556,
+    "p3_sha256_final": 31220,
+    "p3_chacha20": 32816,
+    "p3_hmac_sha256": 31608,
+    "p3_chacha20_block": 32060
+  },
+  "guard_obf_candidates": [
+    {
+      "name": "p3_entry",
+      "vaddr": 0,
+      "size": 2612
+    },
+    {
+      "name": "p3_runtime_check",
+      "vaddr": 2672,
+      "size": 400
+    },
+    {
+      "name": "die_id",
+      "vaddr": 3072,
+      "size": 56
+    },
+    {
+      "name": "verify_canary_and_anti_gg",
+      "vaddr": 3128,
+      "size": 1372
+    },
+    {
+      "name": "verify_manifest_and_self",
+      "vaddr": 4500,
+      "size": 856
+    },
+    {
+      "name": "verify_prologues_got_relro",
+      "vaddr": 5356,
+      "size": 512
+    },
+    {
+      "name": "detected_id",
+      "vaddr": 5868,
+      "size": 116
+    },
+    {
+      "name": "event_id",
+      "vaddr": 5984,
+      "size": 92
+    },
+    {
+      "name": "p3_resolve_string",
+      "vaddr": 6076,
+      "size": 1400
+    },
+    {
+      "name": "canary_state_ptr",
+      "vaddr": 7476,
+      "size": 140
+    },
+    {
+      "name": "p3_spin_lock",
+      "vaddr": 7616,
+      "size": 124
+    },
+    {
+      "name": "page_size",
+      "vaddr": 7740,
+      "size": 328
+    },
+    {
+      "name": "sys6",
+      "vaddr": 8068,
+      "size": 64
+    },
+    {
+      "name": "derive_master_key",
+      "vaddr": 8132,
+      "size": 248
+    },
+    {
+      "name": "p3_on_demand_toggle",
+      "vaddr": 8392,
+      "size": 536
+    },
+    {
+      "name": "decrypt_custom_range",
+      "vaddr": 8928,
+      "size": 316
+    },
+    {
+      "name": "p3_vm_exec",
+      "vaddr": 9244,
+      "size": 4192
+    },
+    {
+      "name": "vm_shift_val",
+      "vaddr": 13436,
+      "size": 176
+    },
+    {
+      "name": "vm_extend_val",
+      "vaddr": 13612,
+      "size": 168
+    },
+    {
+      "name": "vm_eval_cond",
+      "vaddr": 13780,
+      "size": 184
+    },
+    {
+      "name": "p3_inflate_mem",
+      "vaddr": 13964,
+      "size": 68
+    },
+    {
+      "name": "run_env_and_security_probes",
+      "vaddr": 17720,
+      "size": 1160
+    },
+    {
+      "name": "verify_cipher_mac_explicit",
+      "vaddr": 18880,
+      "size": 252
+    },
+    {
+      "name": "inf_dec_chunk",
+      "vaddr": 19132,
+      "size": 216
+    },
+    {
+      "name": "read_sleb",
+      "vaddr": 19348,
+      "size": 136
+    },
+    {
+      "name": "clear_cache",
+      "vaddr": 19484,
+      "size": 100
+    },
+    {
+      "name": "decrypt_range",
+      "vaddr": 19584,
+      "size": 264
+    },
+    {
+      "name": "verify_cipher_mac",
+      "vaddr": 19848,
+      "size": 148
+    },
+    {
+      "name": "decode_str",
+      "vaddr": 19996,
+      "size": 244
+    },
+    {
+      "name": "die",
+      "vaddr": 20240,
+      "size": 220
+    },
+    {
+      "name": "message",
+      "vaddr": 20460,
+      "size": 604
+    },
+    {
+      "name": "read_clock_ms",
+      "vaddr": 21064,
+      "size": 116
+    },
+    {
+      "name": "scan_task_threads_nonroot",
+      "vaddr": 21180,
+      "size": 696
+    },
+    {
+      "name": "open_read_id",
+      "vaddr": 21876,
+      "size": 100
+    },
+    {
+      "name": "build_task_path",
+      "vaddr": 21976,
+      "size": 308
+    },
+    {
+      "name": "scan_fd",
+      "vaddr": 22284,
+      "size": 1756
+    },
+    {
+      "name": "contains",
+      "vaddr": 24040,
+      "size": 136
+    },
+    {
+      "name": "contains_id",
+      "vaddr": 24176,
+      "size": 108
+    },
+    {
+      "name": "exists_id",
+      "vaddr": 24284,
+      "size": 108
+    },
+    {
+      "name": "sha256_update_vol",
+      "vaddr": 24392,
+      "size": 160
+    },
+    {
+      "name": "inf_build_tree",
+      "vaddr": 24552,
+      "size": 184
+    },
+    {
+      "name": "inf_decode_sym",
+      "vaddr": 24736,
+      "size": 460
+    },
+    {
+      "name": "lookup_elf_sym_mem",
+      "vaddr": 25196,
+      "size": 744
+    },
+    {
+      "name": "p3_pack_entry",
+      "vaddr": 26312,
+      "size": 4176
+    },
+    {
+      "name": "p3_sha256_init",
+      "vaddr": 30488,
+      "size": 68
+    },
+    {
+      "name": "p3_sha256",
+      "vaddr": 31480,
+      "size": 128
+    },
+    {
+      "name": "p3_hmac_sha256",
+      "vaddr": 31608,
+      "size": 452
+    }
+  ],
+  "compiler": "Android (13691557, based on r522817d) clang version 18.0.4 (https://android.googlesource.com/toolchain/llvm-project d8003a456d14a3deb8054cdaa529ffbf02d9b262)"
+}
