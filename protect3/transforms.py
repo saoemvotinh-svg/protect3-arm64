@@ -169,7 +169,8 @@ def compile_function_to_vm(func, encode_map):
         elif m in ("add_reg", "adds_reg", "sub_reg", "subs_reg"):
             canon = VM_OP_SUB if m.startswith("sub") else VM_OP_ADD
             cond = (0x80 if ins.flags_set else 0) | (ins.shift_type & 3)
-            aux = (ins.shift_amount & 63) | (0x4000 if ins.rn == 31 else 0)
+            # In ADD/SUB (shifted register), register 31 is always XZR/WZR (never SP)
+            aux = ins.shift_amount & 63
             records.append(VM_INSN.pack(op(canon), ins.rd, ins.rn, ins.rm, w_flag, cond, aux, 0))
         elif m in ("add_ext", "adds_ext", "sub_ext", "subs_ext"):
             canon = VM_OP_SUB_EXT if m.startswith("sub") else VM_OP_ADD_EXT
@@ -325,13 +326,33 @@ def obfuscate_and_relocate_function(
         raise ProtectionError(f"Function {func.name} is not relocatable: {func.skip_reasons}")
     rng = random.Random(seed ^ func.vaddr)
 
-    # Split single-block functions of >= 3 instructions into synthetic basic blocks when flattening/shuffling
+    # Split single-block functions of >= 3 instructions into synthetic basic blocks when flattening/shuffling,
+    # keeping any flag-setting -> flag-consuming (NZCV) instruction chain inside the same synthetic block.
     raw_blocks = []
     if len(func.blocks) == 1 and len(func.instructions) >= 3 and (enable_flatten or enable_shuffle or enable_split):
         insns = func.instructions
-        for idx, ins in enumerate(insns):
-            succ = [idx + 1] if idx + 1 < len(insns) and ins.op_class not in ("ret", "branch", "br") else []
-            raw_blocks.append((ins.va, ins.va + 4, [ins], succ, func.blocks[0].dead_scratch_regs))
+        grouped = []
+        cur_group = []
+        flags_live = False
+        for i, ins in enumerate(insns):
+            cur_group.append(ins)
+            if ins.flags_set:
+                flags_live = True
+            next_uses_flags = (i + 1 < len(insns) and insns[i + 1].flags_used)
+            if ins.flags_used and not next_uses_flags:
+                flags_live = False
+            if not flags_live and not next_uses_flags:
+                grouped.append(cur_group)
+                cur_group = []
+        if cur_group:
+            if grouped:
+                grouped[-1].extend(cur_group)
+            else:
+                grouped.append(cur_group)
+        for idx, grp in enumerate(grouped):
+            last_ins = grp[-1]
+            succ = [idx + 1] if idx + 1 < len(grouped) and last_ins.op_class not in ("ret", "branch", "br") else []
+            raw_blocks.append((grp[0].va, last_ins.va + 4, grp, succ, func.blocks[0].dead_scratch_regs))
     else:
         for b in func.blocks:
             raw_blocks.append((b.start_va, b.end_va, list(b.instructions), list(b.successors), list(b.dead_scratch_regs)))
@@ -1781,7 +1802,10 @@ def build_packed_elf(
     orig_dt_flags = dyn_dict.get(30, 0)
     orig_dt_flags_1 = dyn_dict.get(0x6FFFFFFB, 0)
 
-    # Collect all relocations from DT_RELA (7/8) and DT_JMPREL (23/2) using dynamic table bounds.
+    if orig.has_packed_android_relocs():
+        raise ProtectionError("E09 packed ELF does not support opaque DT_ANDROID_REL/RELA tables.")
+
+    # Collect all relocations from DT_RELA (7/8), DT_JMPREL (23/2), and DT_RELR / SHT_RELR.
     syms = orig.symbols(dynamic_only=True)
     raw_relas = []
     for va_tag, sz_tag in ((7, 8), (23, 2)):
@@ -1792,6 +1816,10 @@ def build_packed_elf(
                 raw_relas.append(struct.unpack_from("<QQq", rdata, off))
 
     rel_relocs = []
+    for r_va in orig.relr_addresses():
+        r_file_off = orig.file_offset(r_va, 8)
+        r_add, = struct.unpack_from("<q", orig.data, r_file_off)
+        rel_relocs.append((r_va, r_add))
     imp_relocs = []
     kept_relocs = []
     for r_off, r_info, r_add in raw_relas:

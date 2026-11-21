@@ -1215,6 +1215,59 @@ void original_init(int a, char **b, char **c) { (void)a; (void)b; (void)c; }
             sems = ledger["differential_semantics_F03"]
             self.assertTrue(any(r.get("status") == "passed" for r in sems), sems)
 
+    def test_vm_xzr_neg_cff_csel_flags_got_data_oob_and_relr_decoding(self):
+        from protect3.runtime import command, ndk_tool
+
+        with tempfile.TemporaryDirectory() as tmp:
+            t = Path(tmp)
+            c_file = t / "isa_edge.c"
+            so_orig = t / "libisa_edge.so"
+            so_prot = t / "libisa_edge.prot.so"
+            c_file.write_text(
+                """
+__attribute__((noinline)) long vm_neg_diff(long a, long b) {
+    long neg_a;
+    __asm__ volatile("sub %0, xzr, %1" : "=r"(neg_a) : "r"(a));
+    return neg_a + b;
+}
+
+__attribute__((noinline)) long cff_single_block_csel(long a, long b) {
+    long res;
+    __asm__ volatile(
+        "cmp %1, %2\\n"
+        "csel %0, %1, %2, gt\\n"
+        : "=r"(res)
+        : "r"(a), "r"(b)
+        : "cc"
+    );
+    return res;
+}
+
+void original_init(int a, char **b, char **c) { (void)a; (void)b; (void)c; }
+""",
+                encoding="utf-8",
+            )
+            command([
+                ndk_tool("clang"), "--target=aarch64-linux-android23", "-shared", "-fPIC", "-O2",
+                "-nostdlib", "-Wl,-z,max-page-size=16384", "-Wl,-init,original_init",
+                str(c_file), "-o", str(so_orig),
+            ])
+            protect(
+                so_orig,
+                so_prot,
+                Options(
+                    virtualize_functions="vm_neg_diff",
+                    flatten_functions="cff_single_block_csel",
+                    verify_semantics=True,
+                ),
+            )
+            runner = Runner(data=so_prot.read_bytes())
+            runner.initialize()
+            self.assertIsNone(runner.exited, runner.log)
+            self.assertEqual((-15 + 40) & 0xFFFFFFFFFFFFFFFF, runner.exported("vm_neg_diff", 15, 40))
+            self.assertEqual(99, runner.exported("cff_single_block_csel", 99, 12))
+            self.assertEqual(77, runner.exported("cff_single_block_csel", 10, 77))
+
 
 if __name__ == "__main__":
     unittest.main()

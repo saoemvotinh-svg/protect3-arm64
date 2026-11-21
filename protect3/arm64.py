@@ -377,7 +377,12 @@ def decode_insn(va, raw):
     # Non-PC-relative SIMD/FP arithmetic, moves, non-literal loads/stores, and barriers
     if (raw & 0x0E000000) in (0x0E000000,) and (raw & 0x3F000000) != 0x1C000000:
         if (raw & 0x1E000000) == 0x0E000000 or (raw & 0x5E000000) == 0x1E000000:
-            return Instruction(va, raw, "simd_insn", "other")
+            # Conservatively mark low 5-bit fields rd/rn/rm and flags_set (for FCMP/FCCMP/FMOV/INS)
+            # so scratch-register allocation (x9..x14) and flag liveness never clobber GPR/NZCV operands.
+            is_fp_scalar = (raw & 0x5E000000) == 0x1E000000
+            return Instruction(va, raw, "simd_insn", "other",
+                               rd=raw & 0x1F, rn=(raw >> 5) & 0x1F, rm=(raw >> 16) & 0x1F,
+                               flags_set=is_fp_scalar)
     if (raw & 0x3B000000) in (0x39000000, 0x38000000) and ((raw >> 26) & 1) == 1:
         rn = (raw >> 5) & 0x1F
         return Instruction(va, raw, "simd_insn", "other", rn=rn)
@@ -386,7 +391,8 @@ def decode_insn(va, raw):
         return Instruction(va, raw, "simd_insn", "other", rn=rn)
     if (raw & 0xBF400000) in (0x0C000000, 0x0C400000):
         rn = (raw >> 5) & 0x1F
-        return Instruction(va, raw, "simd_insn", "other", rn=rn)
+        rm = (raw >> 16) & 0x1F
+        return Instruction(va, raw, "simd_insn", "other", rn=rn, rm=rm)
     if (raw & 0xFFFFF01F) == 0xD503301F:  # DSB / DMB / ISB / CLREX
         return Instruction(va, raw, "barrier", "hint")
     return Instruction(va, raw, "unknown", "other")
@@ -1110,6 +1116,20 @@ def find_rodata_string_refs(elf, functions=None):
     counts = {}
     for r in refs:
         counts[r["string_vaddr"]] = counts.get(r["string_vaddr"], 0) + 1
-    unique_refs = [r for r in refs if counts[r["string_vaddr"]] == 1]
+
+    # Exclude strings also pointed to by data relocations (e.g. R_AARCH64_RELATIVE in .data.rel.ro/.data)
+    reloc_ro_targets = set()
+    for sec in elf.sections:
+        if sec.type == 4 and sec.entsize == 24 and sec.size % 24 == 0:
+            for off in range(sec.offset, sec.offset + sec.size, 24):
+                _, _, r_add = struct.unpack_from("<QQq", elf.data, off)
+                if ro_addr <= r_add < ro_end:
+                    reloc_ro_targets.add(r_add)
+
+    unique_refs = [
+        r for r in refs
+        if counts[r["string_vaddr"]] == 1
+        and not any(r["string_vaddr"] <= rt < r["string_vaddr"] + len(r["string_bytes"]) for rt in reloc_ro_targets)
+    ]
     elf._cached_rodata_string_refs = tuple(unique_refs)
     return unique_refs

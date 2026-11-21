@@ -789,10 +789,11 @@ static void verify_prologues_got_relro(usize bias) {
         usize got_sz = (usize)p3_ext.got_size;
         usize min_va = bias + (usize)p3_ext.valid_target_min;
         usize max_va = bias + (usize)p3_ext.valid_target_max;
+        usize mod_end = p3_ext.guard_code_vaddr ? (bias + (usize)p3_ext.guard_code_vaddr) : max_va;
         for (usize off = 0; off + 8 <= got_sz; off += 8) {
             u64 target = *(const u64 *)(got_addr + off);
             if (!target) continue;
-            if (target >= bias && target < max_va && target < min_va)
+            if (target >= bias && target < mod_end && (target < min_va || target >= max_va))
                 die_id(175, P3S_ERR_GOT_OOB);
         }
         event_id(P3S_EV_GOT_CHK);
@@ -1432,7 +1433,7 @@ void p3_vm_exec(u64 prog_index, u64 *regs) {
             u64 res = vm_mask(a + rhs, w);
             if (ins.cond & 0x80u) nzcv = vm_flags_add(a, rhs, res, w);
             if (rd == 31u) {
-                if (!(ins.cond & 0x80u)) vregs[31] = res;
+                if (!(ins.cond & 0x80u) && (op == VM_OP_ADD_EXT || (ins.aux & 0x8000u))) vregs[31] = res;
             } else vregs[rd] = res;
         } else if (op == VM_OP_SUB || op == VM_OP_SUB_EXT) {
             u64 rhs = (op == VM_OP_SUB_EXT)
@@ -1441,7 +1442,7 @@ void p3_vm_exec(u64 prog_index, u64 *regs) {
             u64 res = vm_mask(a - rhs, w);
             if (ins.cond & 0x80u) nzcv = vm_flags_sub(a, rhs, res, w);
             if (rd == 31u) {
-                if (!(ins.cond & 0x80u)) vregs[31] = res;
+                if (!(ins.cond & 0x80u) && (op == VM_OP_SUB_EXT || (ins.aux & 0x8000u))) vregs[31] = res;
             } else vregs[rd] = res;
         } else if (op == VM_OP_AND) {
             u64 res = vm_mask(a & b, w);

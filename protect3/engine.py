@@ -368,8 +368,13 @@ def check_rodata_encryption(elf):
 
 
 def _has_reloc_overlap(elf, vaddr, size):
-    """Return True if any relocation entry targets [vaddr, vaddr + size)."""
+    """Return True if any relocation entry (RELA/REL/RELR/ANDROID) targets [vaddr, vaddr + size)."""
+    if elf.has_packed_android_relocs():
+        return True
     end = vaddr + size
+    for r_addr in elf.relr_addresses():
+        if r_addr < end and r_addr + 8 > vaddr:
+            return True
     for section in elf.sections:
         if section.type not in (4, 9):
             continue
@@ -425,6 +430,8 @@ def _collect_reloc_free_ro_unwind_ranges(elf, rodata, max_slots, auth):
 
 def _prepare_sparse_data_state(elf):
     """Inspect .data and extract relocation offsets for sparse ChaCha20 encryption (E02+)."""
+    if elf.has_packed_android_relocs():
+        return None, []
     sec = elf.section(".data")
     if not sec or sec.type != 1 or (sec.flags & 3) != 3 or (sec.flags & 4) or sec.size <= 0:
         return None, []
@@ -436,6 +443,11 @@ def _prepare_sparse_data_state(elf):
 
     reloc_offsets = []
     sec_end = sec.addr + sec.size
+    for r_addr in elf.relr_addresses():
+        if r_addr < sec_end and r_addr + 8 > sec.addr:
+            if r_addr < sec.addr or r_addr + 8 > sec_end:
+                return None, []
+            reloc_offsets.append(r_addr - sec.addr)
     for rsec in elf.sections:
         if rsec.type not in (4, 9):
             continue
@@ -922,15 +934,7 @@ def rewrite(elf, options, blob, meta, pre_strip_functions=None, preserve_tables=
     relro_digest = bytes(32)
     if opt.relro_check and relro_sec and relro_sec.size > 0:
         # Only enable static SHA-256 check on .data.rel.ro if no dynamic relocations mutate it at load
-        has_relro_relocs = False
-        for sec in elf.sections:
-            if sec.type in (4, 9):
-                ent = 24 if sec.type == 4 else 16
-                for off in range(sec.offset, sec.offset + sec.size, ent):
-                    r_va, = struct.unpack_from("<Q", elf.data, off)
-                    if relro_sec.addr <= r_va < relro_sec.addr + relro_sec.size:
-                        has_relro_relocs = True
-                        break
+        has_relro_relocs = _has_reloc_overlap(elf, relro_sec.addr, relro_sec.size)
         if not has_relro_relocs:
             relro_vaddr = relro_sec.addr
             relro_size = relro_sec.size
@@ -1414,7 +1418,14 @@ def _publish(data, report, output, force):
             if force:
                 os.replace(temporary, target)
             else:
-                os.link(temporary, target)
+                if target.exists():
+                    raise ProtectionError("Output/report already exists; choose a new path or pass --force.")
+                try:
+                    os.link(temporary, target)
+                except OSError:
+                    if target.exists():
+                        raise ProtectionError("Output/report already exists; choose a new path or pass --force.")
+                    os.replace(temporary, target)
                 created.append(target)
     except Exception:
         if not force:

@@ -200,6 +200,45 @@ class ELF:
         return sorted((s["name"], s["info"], s["other"], s["value"], s["size"])
                       for s in self.symbols() if s["shndx"] and s["info"] >> 4 in (1, 2, 10))
 
+    def has_packed_android_relocs(self):
+        return (
+            any(tag in (0x6000000F, 0x60000011) for tag, _ in self.dynamic)
+            or any(s.type in (0x60000001, 0x60000002) and s.size > 0 for s in self.sections)
+        )
+
+    def relr_addresses(self):
+        """Decode all ELF64 SHT_RELR / DT_RELR relative relocation target virtual addresses."""
+        blobs = []
+        seen_ranges = set()
+        for s in self.sections:
+            if s.type in (19, 0x6FFFFF00) and s.size >= 8 and s.size % 8 == 0:
+                blobs.append(self.section_data(s))
+                seen_ranges.add((s.offset, s.size))
+        for va_tag, sz_tag in ((36, 35), (0x6FFFE000, 0x6FFFE001)):
+            rva, rsz = self.dynamic_value(va_tag), self.dynamic_value(sz_tag)
+            if rva and rsz and rsz >= 8 and rsz % 8 == 0:
+                try:
+                    roff = self.file_offset(rva, rsz)
+                    if (roff, rsz) not in seen_ranges:
+                        blobs.append(bounded(self.data, roff, rsz, "DT_RELR"))
+                        seen_ranges.add((roff, rsz))
+                except ProtectionError:
+                    pass
+        addrs = []
+        for raw in blobs:
+            base = 0
+            for (entry,) in struct.iter_unpack("<Q", raw):
+                if (entry & 1) == 0:
+                    addrs.append(entry)
+                    base = entry + 8
+                else:
+                    bits = entry >> 1
+                    for i in range(63):
+                        if (bits >> i) & 1:
+                            addrs.append(base + i * 8)
+                    base += 63 * 8
+        return sorted(set(addrs))
+
     def summary(self):
         from .hardening import audit_hardening
         strings = b""

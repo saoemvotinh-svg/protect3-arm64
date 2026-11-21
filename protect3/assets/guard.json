@@ -1,90 +1,90 @@
 {
   "version": 1,
-  "sha256": "0e662a521fba2fc22df1db653b1f24336b8ee27d7c6b1a5c65af85e2ed5ff9cf",
-  "source_sha256": "0abad2f9b6a78655fe977d2552384e0516bccb5e0e81b8aea7d35b76e272be27",
-  "size": 49704,
+  "sha256": "7c777990756704a9cac04a1b74251e02913251229a4fef29852025ec44f3a551",
+  "source_sha256": "19ae42fc458fe15174ff4dfc17ba8f61e20f06719ba09c5b328678ebad85d9d3",
+  "size": 49688,
   "symbols": {
     "guard.c": 0,
-    "$x.1": 30488,
+    "$x.1": 30472,
     "$x.2": 2612,
     "verify_canary_and_anti_gg": 3128,
     "verify_manifest_and_self": 4500,
     "verify_prologues_got_relro": 5356,
-    "open_read_id": 21876,
-    "scan_fd": 22284,
-    "detected_id": 5868,
-    "event_id": 5984,
+    "open_read_id": 21868,
+    "scan_fd": 22276,
+    "detected_id": 5904,
+    "event_id": 6020,
     "die_id": 3072,
-    "decode_str": 19996,
-    "die": 20240,
-    "sys6": 8068,
-    "canary_state_ptr": 7476,
-    "p3_spin_lock": 7616,
-    "read_clock_ms": 21064,
-    "p3_spin_unlock": 8380,
-    "scan_task_threads_nonroot": 21180,
-    "exists_id": 24284,
-    "sha256_update_vol": 24392,
-    "message": 20460,
-    "page_size": 7740,
-    "derive_master_key": 8132,
-    "decrypt_custom_range": 8928,
-    "clear_cache": 19484,
-    "vm_shift_val": 13436,
-    "vm_extend_val": 13612,
-    "vm_eval_cond": 13780,
-    "p3_inflate_stream": 14032,
-    "inf_build_tree": 24552,
-    "inf_decode_sym": 24736,
-    "p3_inflate_stream.len_bits": 33066,
-    "p3_inflate_stream.len_base": 33008,
-    "p3_inflate_stream.dist_bits": 33156,
-    "p3_inflate_stream.dist_base": 33096,
-    "p3_inflate_stream.clcidx": 33186,
-    "$x.3": 26312,
-    "run_env_and_security_probes": 17720,
-    "verify_cipher_mac_explicit": 18880,
-    "inf_dec_chunk": 19132,
-    "read_sleb": 19348,
-    "lookup_elf_sym_mem": 25196,
+    "decode_str": 19988,
+    "die": 20232,
+    "sys6": 8104,
+    "canary_state_ptr": 7512,
+    "p3_spin_lock": 7652,
+    "read_clock_ms": 21056,
+    "p3_spin_unlock": 8416,
+    "scan_task_threads_nonroot": 21172,
+    "exists_id": 24276,
+    "sha256_update_vol": 24384,
+    "message": 20452,
+    "page_size": 7776,
+    "derive_master_key": 8168,
+    "decrypt_custom_range": 8964,
+    "clear_cache": 19476,
+    "vm_shift_val": 13428,
+    "vm_extend_val": 13604,
+    "vm_eval_cond": 13772,
+    "p3_inflate_stream": 14024,
+    "inf_build_tree": 24544,
+    "inf_decode_sym": 24728,
+    "p3_inflate_stream.len_bits": 33050,
+    "p3_inflate_stream.len_base": 32992,
+    "p3_inflate_stream.dist_bits": 33140,
+    "p3_inflate_stream.dist_base": 33080,
+    "p3_inflate_stream.clcidx": 33170,
+    "$x.3": 26296,
+    "run_env_and_security_probes": 17712,
+    "verify_cipher_mac_explicit": 18872,
+    "inf_dec_chunk": 19124,
+    "read_sleb": 19340,
+    "lookup_elf_sym_mem": 25188,
     "$x.4": 0,
-    "decrypt_range": 19584,
-    "verify_cipher_mac": 19848,
-    "build_task_path": 21976,
-    "contains_id": 24176,
-    "contains": 24040,
-    "$d.5": 33504,
-    "$d.6": 33008,
-    "p3_vm_call_trampoline": 25952,
-    "p3_vm_bridge": 26048,
-    "p3_vm_exec": 9244,
-    "p3_gate_bridge": 26192,
+    "decrypt_range": 19576,
+    "verify_cipher_mac": 19840,
+    "build_task_path": 21968,
+    "contains_id": 24168,
+    "contains": 24032,
+    "$d.5": 33488,
+    "$d.6": 32992,
+    "p3_vm_call_trampoline": 25936,
+    "p3_vm_bridge": 26032,
+    "p3_vm_exec": 9280,
+    "p3_gate_bridge": 26176,
     "p3_runtime_check": 2672,
     "memcpy": 2612,
     "memset": 2644,
-    "p3_config": 33504,
-    "p3_ext": 35216,
-    "p3_str_cfg": 42672,
-    "p3_data_enc": 48408,
-    "p3_pack": 48576,
-    "p3_resolve_string": 6076,
-    "p3_on_demand_toggle": 8392,
-    "p3_inflate_mem": 13964,
-    "p3_pack_entry": 26312,
+    "p3_config": 33488,
+    "p3_ext": 35200,
+    "p3_str_cfg": 42656,
+    "p3_data_enc": 48392,
+    "p3_pack": 48560,
+    "p3_resolve_string": 6112,
+    "p3_on_demand_toggle": 8428,
+    "p3_inflate_mem": 13956,
+    "p3_pack_entry": 26296,
     "p3_entry": 0,
     "crypto.c": 0,
-    "p3_sha256_init.iv": 33208,
-    "sha_block": 30788,
-    "K": 33240,
-    "$d.2": 33208,
-    "$d.3": 33240,
-    "p3_sha256": 31480,
-    "p3_sha256_init": 30488,
-    "p3_sha256_update": 30556,
-    "p3_sha256_final": 31220,
-    "p3_chacha20": 32816,
-    "p3_hmac_sha256": 31608,
-    "p3_chacha20_block": 32060
+    "p3_sha256_init.iv": 33192,
+    "sha_block": 30772,
+    "K": 33224,
+    "$d.2": 33192,
+    "$d.3": 33224,
+    "p3_sha256": 31464,
+    "p3_sha256_init": 30472,
+    "p3_sha256_update": 30540,
+    "p3_sha256_final": 31204,
+    "p3_chacha20": 32800,
+    "p3_hmac_sha256": 31592,
+    "p3_chacha20_block": 32044
   },
   "guard_obf_candidates": [
     {
@@ -115,211 +115,211 @@
     {
       "name": "verify_prologues_got_relro",
       "vaddr": 5356,
-      "size": 512
+      "size": 548
     },
     {
       "name": "detected_id",
-      "vaddr": 5868,
+      "vaddr": 5904,
       "size": 116
     },
     {
       "name": "event_id",
-      "vaddr": 5984,
+      "vaddr": 6020,
       "size": 92
     },
     {
       "name": "p3_resolve_string",
-      "vaddr": 6076,
+      "vaddr": 6112,
       "size": 1400
     },
     {
       "name": "canary_state_ptr",
-      "vaddr": 7476,
+      "vaddr": 7512,
       "size": 140
     },
     {
       "name": "p3_spin_lock",
-      "vaddr": 7616,
+      "vaddr": 7652,
       "size": 124
     },
     {
       "name": "page_size",
-      "vaddr": 7740,
+      "vaddr": 7776,
       "size": 328
     },
     {
       "name": "sys6",
-      "vaddr": 8068,
+      "vaddr": 8104,
       "size": 64
     },
     {
       "name": "derive_master_key",
-      "vaddr": 8132,
+      "vaddr": 8168,
       "size": 248
     },
     {
       "name": "p3_on_demand_toggle",
-      "vaddr": 8392,
+      "vaddr": 8428,
       "size": 536
     },
     {
       "name": "decrypt_custom_range",
-      "vaddr": 8928,
+      "vaddr": 8964,
       "size": 316
     },
     {
       "name": "p3_vm_exec",
-      "vaddr": 9244,
-      "size": 4192
+      "vaddr": 9280,
+      "size": 4148
     },
     {
       "name": "vm_shift_val",
-      "vaddr": 13436,
+      "vaddr": 13428,
       "size": 176
     },
     {
       "name": "vm_extend_val",
-      "vaddr": 13612,
+      "vaddr": 13604,
       "size": 168
     },
     {
       "name": "vm_eval_cond",
-      "vaddr": 13780,
+      "vaddr": 13772,
       "size": 184
     },
     {
       "name": "p3_inflate_mem",
-      "vaddr": 13964,
+      "vaddr": 13956,
       "size": 68
     },
     {
       "name": "run_env_and_security_probes",
-      "vaddr": 17720,
+      "vaddr": 17712,
       "size": 1160
     },
     {
       "name": "verify_cipher_mac_explicit",
-      "vaddr": 18880,
+      "vaddr": 18872,
       "size": 252
     },
     {
       "name": "inf_dec_chunk",
-      "vaddr": 19132,
+      "vaddr": 19124,
       "size": 216
     },
     {
       "name": "read_sleb",
-      "vaddr": 19348,
+      "vaddr": 19340,
       "size": 136
     },
     {
       "name": "clear_cache",
-      "vaddr": 19484,
+      "vaddr": 19476,
       "size": 100
     },
     {
       "name": "decrypt_range",
-      "vaddr": 19584,
+      "vaddr": 19576,
       "size": 264
     },
     {
       "name": "verify_cipher_mac",
-      "vaddr": 19848,
+      "vaddr": 19840,
       "size": 148
     },
     {
       "name": "decode_str",
-      "vaddr": 19996,
+      "vaddr": 19988,
       "size": 244
     },
     {
       "name": "die",
-      "vaddr": 20240,
+      "vaddr": 20232,
       "size": 220
     },
     {
       "name": "message",
-      "vaddr": 20460,
+      "vaddr": 20452,
       "size": 604
     },
     {
       "name": "read_clock_ms",
-      "vaddr": 21064,
+      "vaddr": 21056,
       "size": 116
     },
     {
       "name": "scan_task_threads_nonroot",
-      "vaddr": 21180,
+      "vaddr": 21172,
       "size": 696
     },
     {
       "name": "open_read_id",
-      "vaddr": 21876,
+      "vaddr": 21868,
       "size": 100
     },
     {
       "name": "build_task_path",
-      "vaddr": 21976,
+      "vaddr": 21968,
       "size": 308
     },
     {
       "name": "scan_fd",
-      "vaddr": 22284,
+      "vaddr": 22276,
       "size": 1756
     },
     {
       "name": "contains",
-      "vaddr": 24040,
+      "vaddr": 24032,
       "size": 136
     },
     {
       "name": "contains_id",
-      "vaddr": 24176,
+      "vaddr": 24168,
       "size": 108
     },
     {
       "name": "exists_id",
-      "vaddr": 24284,
+      "vaddr": 24276,
       "size": 108
     },
     {
       "name": "sha256_update_vol",
-      "vaddr": 24392,
+      "vaddr": 24384,
       "size": 160
     },
     {
       "name": "inf_build_tree",
-      "vaddr": 24552,
+      "vaddr": 24544,
       "size": 184
     },
     {
       "name": "inf_decode_sym",
-      "vaddr": 24736,
+      "vaddr": 24728,
       "size": 460
     },
     {
       "name": "lookup_elf_sym_mem",
-      "vaddr": 25196,
+      "vaddr": 25188,
       "size": 744
     },
     {
       "name": "p3_pack_entry",
-      "vaddr": 26312,
+      "vaddr": 26296,
       "size": 4176
     },
     {
       "name": "p3_sha256_init",
-      "vaddr": 30488,
+      "vaddr": 30472,
       "size": 68
     },
     {
       "name": "p3_sha256",
-      "vaddr": 31480,
+      "vaddr": 31464,
       "size": 128
     },
     {
       "name": "p3_hmac_sha256",
-      "vaddr": 31608,
+      "vaddr": 31592,
       "size": 452
     }
   ],
